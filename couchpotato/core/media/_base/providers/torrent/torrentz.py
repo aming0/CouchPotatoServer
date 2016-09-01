@@ -15,9 +15,11 @@ log = CPLog(__name__)
 class Base(TorrentMagnetProvider, RSS):
 
     urls = {
-         'detail': 'https://torrentz.eu/%s',
-         'search': 'https://torrentz.eu/feed?q=%s',
-         'verified_search': 'https://torrentz.eu/feed_verified?q=%s'
+        'detail': 'https://torrentz2.eu/%s',
+        'search': 'https://torrentz2.eu/feed?f=%s',
+        #'verified_search': 'https://torrentz.eu/feed_verified?q=%s'
+        'verified_search': 'https://torrentz2.eu/feed?f=%s'
+
     }
 
     http_time_between_calls = 0
@@ -29,14 +31,15 @@ class Base(TorrentMagnetProvider, RSS):
         # Create search parameters
         search_params = self.buildUrl(title, media, quality)
 
-        smin = quality.get('size_min')
-        smax = quality.get('size_max')
-        if smin and smax:
-            search_params += ' size %sm - %sm' % (smin, smax)
+        #smin = quality.get('size_min')
+        #smax = quality.get('size_max')
 
-        min_seeds = tryInt(self.conf('minimal_seeds'))
-        if min_seeds:
-            search_params += ' seed > %s' % (min_seeds - 1)
+        #if smin and smax:
+        #    search_params += ' size %sm - %sm' % (smin, smax)
+
+        #min_seeds = tryInt(self.conf('minimal_seeds'))
+        #if min_seeds:
+        #    search_params += ' seed > %s' % (min_seeds - 1)
 
         rss_data = self.getRSSData(search_url % search_params)
 
@@ -52,7 +55,7 @@ class Base(TorrentMagnetProvider, RSS):
                     magnet = splitString(detail_url, '/')[-1]
                     magnet_url = 'magnet:?xt=urn:btih:%s&dn=%s&tr=%s' % (magnet.upper(), tryUrlencode(name), tryUrlencode('udp://tracker.openbittorrent.com/announce'))
 
-                    reg = re.search('Size: (?P<size>\d+) MB Seeds: (?P<seeds>[\d,]+) Peers: (?P<peers>[\d,]+)', six.text_type(description))
+                    reg = re.search('Size: (?P<size>\d+) [MG]B Seeds: (?P<seeds>[\d,]+) Peers: (?P<peers>[\d,]+)', six.text_type(description))
                     size = reg.group('size')
                     seeds = reg.group('seeds').replace(',', '')
                     peers = reg.group('peers').replace(',', '')
@@ -72,13 +75,13 @@ class Base(TorrentMagnetProvider, RSS):
 
 
 config = [{
-    'name': 'torrentz',
+    'name': 'torrentz2',
     'groups': [
         {
             'tab': 'searcher',
             'list': 'torrent_providers',
-            'name': 'Torrentz',
-            'description': 'Torrentz is a free, fast and powerful meta-search engine. <a href="https://torrentz.eu/" target="_blank">Torrentz</a>',
+            'name': 'Torrentz2',
+            'description': 'Torrentz2 is a free, fast and powerful meta-search engine. <a href="https://torrentz2.eu/" target="_blank">Torrentz2</a>',
             'wizard': True,
             'icon': 'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAQklEQVQ4y2NgAALjtJn/ycEMlGiGG0IVAxiwAKzOxaKGARcgxgC8YNSAwWoAzuRMjgsIugqfAUR5CZcBRIcHsWEAADSA96Ig020yAAAAAElFTkSuQmCC',
             'options': [
