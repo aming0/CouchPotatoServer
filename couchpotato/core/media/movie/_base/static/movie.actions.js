@@ -127,6 +127,32 @@ MA.IMDB = new Class({
 
 });
 
+MA.Filmaffinity = new Class({
+
+	Extends: MovieAction,
+
+	create: function(){
+		var self = this;
+
+		self.button = self.createButton();
+		self.detail_button = self.createButton();
+
+	},
+
+	createButton: function(){
+		var self = this;
+
+		return new Element('a.filmaffinity', {
+			'text': 'Filmaffinity',
+			'title': 'Go to the Filmaffinity page of ' + self.getTitle(),
+			'href': 'https://www.filmaffinity.com/es/search.php?stext=' + self.getTitle(),
+			'target': '_blank'
+		});
+	},
+
+});
+
+
 MA.Release = new Class({
 
 	Extends: MovieAction,

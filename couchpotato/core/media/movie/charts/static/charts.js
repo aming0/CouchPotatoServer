@@ -47,7 +47,7 @@ var Charts = new Class({
 					'identifier': chart.name.toLowerCase().replace(/[^a-z0-9]+/g, '_'),
 					'title': chart.name,
 					'description': '<a href="'+chart.url+'" target="_blank">See source</a>',
-					'actions': [MA.Add, MA.ChartIgnore, MA.IMDB, MA.Trailer],
+					'actions': [MA.Add, MA.ChartIgnore, MA.IMDB, MA.Filmaffinity, MA.Trailer],
 					'load_more': false,
 					'view': 'thumb',
 					'force_view': true,
