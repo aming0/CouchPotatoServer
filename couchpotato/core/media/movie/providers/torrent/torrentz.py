@@ -5,10 +5,10 @@ from couchpotato.core.media.movie.providers.base import MovieProvider
 
 log = CPLog(__name__)
 
-autoload = 'Torrentz'
+autoload = 'Torrentz2'
 
 
-class Torrentz(MovieProvider, Base):
+class Torrentz2(MovieProvider, Base):
 
     def buildUrl(self, title, media, quality):
         return tryUrlencode('"%s %s"' % (title, media['info']['year']))

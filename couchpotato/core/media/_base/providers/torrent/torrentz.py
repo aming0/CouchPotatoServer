@@ -18,7 +18,7 @@ class Base(TorrentMagnetProvider, RSS):
         'detail': 'https://torrentz2.eu/%s',
         'search': 'https://torrentz2.eu/feed?f=%s',
         #'verified_search': 'https://torrentz.eu/feed_verified?q=%s'
-        'verified_search': 'https://torrentz2.eu/feed?f=%s'
+        'verified_search': 'https://torrentz2.eu/verified?f=%s'
 
     }
 
