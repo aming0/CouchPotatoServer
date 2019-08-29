@@ -26,20 +26,15 @@ class Base(TorrentMagnetProvider, RSS):
 
     def _searchOnTitle(self, title, media, quality, results):
 
-        search_url = self.urls['verified_search'] if self.conf('verified_only') else self.urls['search']
+        search_url = self.urls['search']
 
         # Create search parameters
         search_params = self.buildUrl(title, media, quality)
 
-        #smin = quality.get('size_min')
-        #smax = quality.get('size_max')
 
-        #if smin and smax:
-        #    search_params += ' size %sm - %sm' % (smin, smax)
-
-        #min_seeds = tryInt(self.conf('minimal_seeds'))
-        #if min_seeds:
-        #    search_params += ' seed > %s' % (min_seeds - 1)
+        min_seeds = tryInt(self.conf('minimal_seeds'))
+        if min_seeds:
+            search_params += ' seed > %s' % (min_seeds - 1)
 
         rss_data = self.getRSSData(search_url % search_params)
 
@@ -55,17 +50,24 @@ class Base(TorrentMagnetProvider, RSS):
                     magnet = splitString(detail_url, '/')[-1]
                     magnet_url = 'magnet:?xt=urn:btih:%s&dn=%s&tr=%s' % (magnet.upper(), tryUrlencode(name), tryUrlencode('udp://tracker.openbittorrent.com/announce'))
 
-                    reg = re.search('Size: (?P<size>\d+) [MG]B Seeds: (?P<seeds>[\d,]+) Peers: (?P<peers>[\d,]+)', six.text_type(description))
+                    reg = re.search('Size: (?P<size>\d+) (?P<unit>[KMG]B) Seeds: (?P<seeds>[\d,]+) Peers: (?P<peers>[\d,]+)', six.text_type(description))
                     size = reg.group('size')
+                    unit = reg.group('unit')
                     seeds = reg.group('seeds').replace(',', '')
                     peers = reg.group('peers').replace(',', '')
+
+                    multiplier = 1
+                    if unit == 'GB':
+                        multiplier = 1000
+                    elif unit == 'KB':
+                        multiplier = 0
 
                     results.append({
                         'id': magnet,
                         'name': six.text_type(name),
                         'url': magnet_url,
                         'detail_url': detail_url,
-                        'size': tryInt(size),
+                        'size': tryInt(size)*multiplier,
                         'seeders': tryInt(seeds),
                         'leechers': tryInt(peers),
                     })
@@ -89,13 +91,6 @@ config = [{
                     'name': 'enabled',
                     'type': 'enabler',
                     'default': True
-                },
-                {
-                    'name': 'verified_only',
-                    'type': 'bool',
-                    'default': True,
-                    'advanced': True,
-                    'description': 'Only search verified releases',
                 },
                 {
                     'name': 'minimal_seeds',

@@ -95,12 +95,12 @@ class Sabnzbd(DownloaderBase):
                 'mode': 'version',
             })
             v = sab_data.split('.')
-            if int(v[0]) == 0 and int(v[1]) < 7:
+            if sab_data != 'develop' and int(v[0]) == 0 and int(v[1]) < 7:
                 return False, 'Your Sabnzbd client is too old, please update to newest version.'
 
             # the version check will work even with wrong api key, so we need the next check as well
             sab_data = self.call({
-                'mode': 'qstatus',
+                'mode': 'queue',
             })
             if not sab_data:
                 return False
